@@ -15,7 +15,14 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Push to mirror
+      - name: Configure mirror
         run: |
           git remote add mirror https://x-access-token:${{ secrets.MIRRORCHECK }}@github.com/jeetendravasisht/Grocery-store.git
+
+      - name: Check mirror access
+        run: |
+          git ls-remote mirror
+
+      - name: Push to mirror
+        run: |
           git push mirror --mirror
