@@ -14,12 +14,20 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Configure mirror
+        env:
+          MIRROR_TOKEN: ${{ secrets.MIRRORCHECK }}
         run: |
-          git remote add mirror https://x-access-token:${{ secrets.MIRRORCHECK }}@github.com/jeetendravasisht/Grocery-store.git
+          if [ -z "$MIRROR_TOKEN" ]; then
+            echo "ERROR: MIRRORCHECK secret is empty or unavailable."
+            exit 1
+          fi
 
-      - name: Check mirror access
+          git remote add mirror "https://x-access-token:${MIRROR_TOKEN}@github.com/jeetendravasisht/Grocery-store.git"
+
+      - name: Test mirror access
         run: |
           git ls-remote mirror
 
